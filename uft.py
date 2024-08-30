@@ -202,6 +202,75 @@ def compress_pdf(file_path):
         print(f"Error compressing PDF: {e}")
 
 
+def count_words(file_path):
+    """Count the number of words in a text file."""
+    try:
+        with open(file_path, "r") as file:
+            text = file.read()
+        word_count = len(text.split())
+        print(f"Word count: {word_count}")
+    except Exception as e:
+        print(f"Error counting words: {e}")
+
+
+def count_lines(file_path):
+    """Count the number of lines in a text file."""
+    try:
+        with open(file_path, "r") as file:
+            line_count = sum(1 for line in file)
+        print(f"Line count: {line_count}")
+    except Exception as e:
+        print(f"Error counting lines: {e}")
+
+
+def find_and_replace(file_path):
+    """Find and replace text in a file."""
+    try:
+        find_text = input("Enter the text to find: ")
+        replace_text = input("Enter the text to replace with: ")
+        with open(file_path, "r") as file:
+            content = file.read()
+        content = content.replace(find_text, replace_text)
+        with open(file_path, "w") as file:
+            file.write(content)
+        print("Text replaced successfully.")
+    except Exception as e:
+        print(f"Error finding and replacing text: {e}")
+
+
+def convert_case(file_path):
+    """Convert text to uppercase or lowercase."""
+    try:
+        print("1. Convert to Uppercase")
+        print("2. Convert to Lowercase")
+        choice = input("Select option: ")
+        with open(file_path, "r") as file:
+            content = file.read()
+        if choice == "1":
+            content = content.upper()
+        elif choice == "2":
+            content = content.lower()
+        else:
+            print("Invalid option selected.")
+            return
+        with open(file_path, "w") as file:
+            file.write(content)
+        print("Text case converted successfully.")
+    except Exception as e:
+        print(f"Error converting text case: {e}")
+
+
+def append_text(file_path):
+    """Append text to a file."""
+    try:
+        new_text = input("Enter text to append: ")
+        with open(file_path, "a") as file:
+            file.write(new_text)
+        print("Text appended successfully.")
+    except Exception as e:
+        print(f"Error appending text: {e}")
+
+
 def handle_image(file_path):
     print("1. Resize Image")
     print("2. Convert Image")
@@ -240,8 +309,8 @@ def handle_pdf(file_path):
     if choice == "1":
         pdf_to_text(file_path)
     elif choice == "2":
-        output_path = input("Enter output file name: ")
-        input_files = input("Enter PDF files to merge (comma-separated): ").split(',')
+        output_path = input("Enter output file path for merged PDF: ")
+        input_files = input("Enter input PDF files to merge (comma-separated): ").split(",")
         merge_pdfs(output_path, *input_files)
     elif choice == "3":
         split_pdf(file_path)
@@ -251,6 +320,27 @@ def handle_pdf(file_path):
         rotate_pages(file_path)
     elif choice == "6":
         compress_pdf(file_path)
+    else:
+        print("Invalid option selected.")
+
+
+def handle_text(file_path):
+    print("1. Count Words")
+    print("2. Count Lines")
+    print("3. Find and Replace Text")
+    print("4. Convert Text Case")
+    print("5. Append Text")
+    choice = input("Select option: ")
+    if choice == "1":
+        count_words(file_path)
+    elif choice == "2":
+        count_lines(file_path)
+    elif choice == "3":
+        find_and_replace(file_path)
+    elif choice == "4":
+        convert_case(file_path)
+    elif choice == "5":
+        append_text(file_path)
     else:
         print("Invalid option selected.")
 
@@ -272,6 +362,8 @@ def main():
         handle_image(file_path)
     elif file_extension == ".pdf":
         handle_pdf(file_path)
+    elif file_extension == ".txt":
+        handle_text(file_path)
     else:
         print("Unsupported file type.")
 
