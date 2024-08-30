@@ -2,6 +2,10 @@ import argparse
 import os
 from PIL import Image
 from PyPDF2 import PdfReader, PdfWriter
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+import hashlib
+from cryptography.fernet import Fernet
 
 
 def resize_image(file_path):
@@ -241,11 +245,11 @@ def find_and_replace(file_path):
 def convert_case(file_path):
     """Convert text to uppercase or lowercase."""
     try:
-        print("1. Convert to Uppercase")
-        print("2. Convert to Lowercase")
-        choice = input("Select option: ")
         with open(file_path, "r") as file:
             content = file.read()
+        print("1. Convert to UPPERCASE")
+        print("2. Convert to lowercase")
+        choice = input("Select option: ")
         if choice == "1":
             content = content.upper()
         elif choice == "2":
@@ -269,6 +273,65 @@ def append_text(file_path):
         print("Text appended successfully.")
     except Exception as e:
         print(f"Error appending text: {e}")
+
+
+def text_to_pdf(file_path):
+    """Convert a text file to a PDF."""
+    try:
+        pdf_path = os.path.splitext(file_path)[0] + ".pdf"
+        with open(file_path, "r") as file:
+            text = file.read()
+        c = canvas.Canvas(pdf_path, pagesize=letter)
+        c.drawString(72, 720, text)
+        c.save()
+        print(f"Text file converted to PDF successfully: {pdf_path}")
+    except Exception as e:
+        print(f"Error converting text to PDF: {e}")
+
+
+def calculate_hash(file_path, algorithm="sha256"):
+    """Calculate the hash of a file."""
+    try:
+        hash_function = getattr(hashlib, algorithm)
+        hasher = hash_function()
+        with open(file_path, "rb") as file:
+            while chunk := file.read(8192):
+                hasher.update(chunk)
+        hash_value = hasher.hexdigest()
+        print(f"{algorithm.upper()} hash of {file_path}: {hash_value}")
+    except Exception as e:
+        print(f"Error calculating hash: {e}")
+
+
+def aes_encrypt(file_path):
+    """Encrypt a text file using AES."""
+    try:
+        key = Fernet.generate_key()
+        cipher_suite = Fernet(key)
+        with open(file_path, "rb") as file:
+            file_data = file.read()
+        encrypted_data = cipher_suite.encrypt(file_data)
+        encrypted_file_path = os.path.splitext(file_path)[0] + "_encrypted.txt"
+        with open(encrypted_file_path, "wb") as file:
+            file.write(encrypted_data)
+        print(f"File encrypted successfully. Key: {key.decode()}")
+    except Exception as e:
+        print(f"Error encrypting file: {e}")
+
+
+def aes_decrypt(file_path, key):
+    """Decrypt a text file using AES."""
+    try:
+        cipher_suite = Fernet(key.encode())
+        with open(file_path, "rb") as file:
+            encrypted_data = file.read()
+        decrypted_data = cipher_suite.decrypt(encrypted_data)
+        decrypted_file_path = os.path.splitext(file_path)[0] + "_decrypted.txt"
+        with open(decrypted_file_path, "wb") as file:
+            file.write(decrypted_data)
+        print("File decrypted successfully.")
+    except Exception as e:
+        print(f"Error decrypting file: {e}")
 
 
 def handle_image(file_path):
@@ -330,6 +393,10 @@ def handle_text(file_path):
     print("3. Find and Replace Text")
     print("4. Convert Text Case")
     print("5. Append Text")
+    print("6. Convert Text to PDF")
+    print("7. Calculate Hash (SHA-256, SHA-1, MD5)")
+    print("8. Encrypt Text with AES")
+    print("9. Decrypt Text with AES")
     choice = input("Select option: ")
     if choice == "1":
         count_words(file_path)
@@ -341,6 +408,24 @@ def handle_text(file_path):
         convert_case(file_path)
     elif choice == "5":
         append_text(file_path)
+    elif choice == "6":
+        text_to_pdf(file_path)
+    elif choice == "7":
+        print("1. SHA-256\n2. SHA-1\n3. MD5")
+        hash_choice = input("Select hashing algorithm: ")
+        if hash_choice == "1":
+            calculate_hash(file_path, "sha256")
+        elif hash_choice == "2":
+            calculate_hash(file_path, "sha1")
+        elif hash_choice == "3":
+            calculate_hash(file_path, "md5")
+        else:
+            print("Invalid option selected.")
+    elif choice == "8":
+        aes_encrypt(file_path)
+    elif choice == "9":
+        key = input("Enter the AES decryption key: ")
+        aes_decrypt(file_path, key)
     else:
         print("Invalid option selected.")
 
