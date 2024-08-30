@@ -31,6 +31,71 @@ def convert_image(file_path):
     except Exception as e:
         print(f"Error converting image: {e}")
 
+def rotate_image(file_path):
+    """Rotate an image."""
+    try:
+        img = Image.open(file_path)
+        angle = int(input("Enter angle to rotate (in degrees): "))
+        img = img.rotate(angle)
+        img.save(file_path)
+        print("Image rotated successfully.")
+    except Exception as e:
+        print(f"Error rotating image: {e}")
+
+def flip_image(file_path):
+    """Flip an image."""
+    try:
+        img = Image.open(file_path)
+        print("1. Flip horizontally")
+        print("2. Flip vertically")
+        choice = input("Select option: ")
+        if choice == "1":
+            img = img.transpose(Image.FLIP_LEFT_RIGHT)
+        elif choice == "2":
+            img = img.transpose(Image.FLIP_TOP_BOTTOM)
+        else:
+            print("Invalid option selected.")
+            return
+        img.save(file_path)
+        print("Image flipped successfully.")
+    except Exception as e:
+        print(f"Error flipping image: {e}")
+
+def grayscale_image(file_path):
+    """Convert image to grayscale."""
+    try:
+        img = Image.open(file_path)
+        img = img.convert("L")
+        img.save(file_path)
+        print("Image converted to grayscale successfully.")
+    except Exception as e:
+        print(f"Error converting image to grayscale: {e}")
+
+def crop_image(file_path):
+    """Crop an image."""
+    try:
+        img = Image.open(file_path)
+        print(f"Current size: {img.size}")
+        left = int(input("Enter left coordinate: "))
+        top = int(input("Enter top coordinate: "))
+        right = int(input("Enter right coordinate: "))
+        bottom = int(input("Enter bottom coordinate: "))
+        img = img.crop((left, top, right, bottom))
+        img.save(file_path)
+        print("Image cropped successfully.")
+    except Exception as e:
+        print(f"Error cropping image: {e}")
+
+def compress_image(file_path):
+    """Compress an image by adjusting quality."""
+    try:
+        img = Image.open(file_path)
+        quality = int(input("Enter compression quality (1-100): "))
+        img.save(file_path, quality=quality)
+        print("Image compressed successfully.")
+    except Exception as e:
+        print(f"Error compressing image: {e}")
+
 def pdf_to_text(file_path):
     """Convert PDF to text."""
     try:
@@ -48,11 +113,26 @@ def pdf_to_text(file_path):
 def handle_image(file_path):
     print("1. Resize Image")
     print("2. Convert Image")
+    print("3. Rotate Image")
+    print("4. Flip Image")
+    print("5. Convert to Grayscale")
+    print("6. Crop Image")
+    print("7. Compress Image")
     choice = input("Select option: ")
     if choice == "1":
         resize_image(file_path)
     elif choice == "2":
         convert_image(file_path)
+    elif choice == "3":
+        rotate_image(file_path)
+    elif choice == "4":
+        flip_image(file_path)
+    elif choice == "5":
+        grayscale_image(file_path)
+    elif choice == "6":
+        crop_image(file_path)
+    elif choice == "7":
+        compress_image(file_path)
     else:
         print("Invalid option selected.")
 
