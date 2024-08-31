@@ -6,7 +6,7 @@ from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 import hashlib
 from cryptography.fernet import Fernet
-
+from moviepy.editor import VideoFileClip, concatenate_videoclips
 
 def resize_image(file_path):
     """Resize an image."""
@@ -20,7 +20,6 @@ def resize_image(file_path):
         print("Image resized successfully.")
     except Exception as e:
         print(f"Error resizing image: {e}")
-
 
 def convert_image(file_path):
     """Convert image to another format."""
@@ -37,7 +36,6 @@ def convert_image(file_path):
     except Exception as e:
         print(f"Error converting image: {e}")
 
-
 def rotate_image(file_path):
     """Rotate an image."""
     try:
@@ -48,7 +46,6 @@ def rotate_image(file_path):
         print("Image rotated successfully.")
     except Exception as e:
         print(f"Error rotating image: {e}")
-
 
 def flip_image(file_path):
     """Flip an image."""
@@ -69,7 +66,6 @@ def flip_image(file_path):
     except Exception as e:
         print(f"Error flipping image: {e}")
 
-
 def grayscale_image(file_path):
     """Convert image to grayscale."""
     try:
@@ -79,7 +75,6 @@ def grayscale_image(file_path):
         print("Image converted to grayscale successfully.")
     except Exception as e:
         print(f"Error converting image to grayscale: {e}")
-
 
 def crop_image(file_path):
     """Crop an image."""
@@ -96,7 +91,6 @@ def crop_image(file_path):
     except Exception as e:
         print(f"Error cropping image: {e}")
 
-
 def compress_image(file_path):
     """Compress an image by adjusting quality."""
     try:
@@ -106,7 +100,6 @@ def compress_image(file_path):
         print("Image compressed successfully.")
     except Exception as e:
         print(f"Error compressing image: {e}")
-
 
 def pdf_to_text(file_path):
     """Convert PDF to text."""
@@ -122,7 +115,6 @@ def pdf_to_text(file_path):
     except Exception as e:
         print(f"Error converting PDF to text: {e}")
 
-
 def merge_pdfs(output_path, *input_files):
     """Merge multiple PDF files into one."""
     try:
@@ -137,7 +129,6 @@ def merge_pdfs(output_path, *input_files):
     except Exception as e:
         print(f"Error merging PDFs: {e}")
 
-
 def split_pdf(file_path):
     """Split a PDF file into individual pages."""
     try:
@@ -151,7 +142,6 @@ def split_pdf(file_path):
         print("PDF split successfully.")
     except Exception as e:
         print(f"Error splitting PDF: {e}")
-
 
 def extract_pages(file_path):
     """Extract specific pages from a PDF."""
@@ -168,7 +158,6 @@ def extract_pages(file_path):
         print("Pages extracted successfully.")
     except Exception as e:
         print(f"Error extracting pages: {e}")
-
 
 def rotate_pages(file_path):
     """Rotate specific pages in a PDF."""
@@ -189,7 +178,6 @@ def rotate_pages(file_path):
     except Exception as e:
         print(f"Error rotating pages: {e}")
 
-
 def compress_pdf(file_path):
     """Compress a PDF by reducing its quality."""
     try:
@@ -205,7 +193,6 @@ def compress_pdf(file_path):
     except Exception as e:
         print(f"Error compressing PDF: {e}")
 
-
 def count_words(file_path):
     """Count the number of words in a text file."""
     try:
@@ -216,7 +203,6 @@ def count_words(file_path):
     except Exception as e:
         print(f"Error counting words: {e}")
 
-
 def count_lines(file_path):
     """Count the number of lines in a text file."""
     try:
@@ -225,7 +211,6 @@ def count_lines(file_path):
         print(f"Line count: {line_count}")
     except Exception as e:
         print(f"Error counting lines: {e}")
-
 
 def find_and_replace(file_path):
     """Find and replace text in a file."""
@@ -240,7 +225,6 @@ def find_and_replace(file_path):
         print("Text replaced successfully.")
     except Exception as e:
         print(f"Error finding and replacing text: {e}")
-
 
 def convert_case(file_path):
     """Convert text to uppercase or lowercase."""
@@ -263,7 +247,6 @@ def convert_case(file_path):
     except Exception as e:
         print(f"Error converting text case: {e}")
 
-
 def append_text(file_path):
     """Append text to a file."""
     try:
@@ -273,7 +256,6 @@ def append_text(file_path):
         print("Text appended successfully.")
     except Exception as e:
         print(f"Error appending text: {e}")
-
 
 def text_to_pdf(file_path):
     """Convert a text file to a PDF."""
@@ -288,7 +270,6 @@ def text_to_pdf(file_path):
     except Exception as e:
         print(f"Error converting text to PDF: {e}")
 
-
 def calculate_hash(file_path, algorithm="sha256"):
     """Calculate the hash of a file."""
     try:
@@ -301,7 +282,6 @@ def calculate_hash(file_path, algorithm="sha256"):
         print(f"{algorithm.upper()} hash of {file_path}: {hash_value}")
     except Exception as e:
         print(f"Error calculating hash: {e}")
-
 
 def aes_encrypt(file_path):
     """Encrypt a text file using AES."""
@@ -318,7 +298,6 @@ def aes_encrypt(file_path):
     except Exception as e:
         print(f"Error encrypting file: {e}")
 
-
 def aes_decrypt(file_path, key):
     """Decrypt a text file using AES."""
     try:
@@ -333,6 +312,74 @@ def aes_decrypt(file_path, key):
     except Exception as e:
         print(f"Error decrypting file: {e}")
 
+def add_image_to_pdf(pdf_path, image_path):
+    """Add an image to a PDF."""
+    try:
+        pdf_writer = PdfWriter()
+        pdf_reader = PdfReader(pdf_path)
+        for page in pdf_reader.pages:
+            pdf_writer.add_page(page)
+
+        img = Image.open(image_path)
+        img_width, img_height = img.size
+        img_pdf_path = os.path.splitext(image_path)[0] + ".pdf"
+        img.save(img_pdf_path, "PDF", resolution=100.0)
+
+        img_reader = PdfReader(img_pdf_path)
+        for img_page in img_reader.pages:
+            pdf_writer.add_page(img_page)
+
+        output_pdf_path = os.path.splitext(pdf_path)[0] + "_with_image.pdf"
+        with open(output_pdf_path, "wb") as output_pdf:
+            pdf_writer.write(output_pdf)
+        print(f"Image added to PDF successfully: {output_pdf_path}")
+    except Exception as e:
+        print(f"Error adding image to PDF: {e}")
+
+def video_operations(file_path):
+    """Perform basic video operations."""
+    print("1. Get Video Duration")
+    print("2. Extract Audio from Video")
+    print("3. Concatenate Videos")
+    print("4. Resize Video")
+    choice = input("Select option: ")
+    if choice == "1":
+        try:
+            video = VideoFileClip(file_path)
+            print(f"Video duration: {video.duration} seconds")
+        except Exception as e:
+            print(f"Error getting video duration: {e}")
+    elif choice == "2":
+        try:
+            video = VideoFileClip(file_path)
+            audio_path = os.path.splitext(file_path)[0] + "_audio.mp3"
+            video.audio.write_audiofile(audio_path)
+            print(f"Audio extracted successfully: {audio_path}")
+        except Exception as e:
+            print(f"Error extracting audio: {e}")
+    elif choice == "3":
+        try:
+            video_files = input("Enter video files to concatenate (comma-separated): ").split(",")
+            clips = [VideoFileClip(v.strip()) for v in video_files]
+            final_clip = concatenate_videoclips(clips)
+            output_path = "concatenated_video.mp4"
+            final_clip.write_videofile(output_path)
+            print(f"Videos concatenated successfully: {output_path}")
+        except Exception as e:
+            print(f"Error concatenating videos: {e}")
+    elif choice == "4":
+        try:
+            video = VideoFileClip(file_path)
+            width = int(input("Enter new width: "))
+            height = int(input("Enter new height: "))
+            resized_video = video.resize(newsize=(width, height))
+            output_path = os.path.splitext(file_path)[0] + "_resized.mp4"
+            resized_video.write_videofile(output_path)
+            print(f"Video resized successfully: {output_path}")
+        except Exception as e:
+            print(f"Error resizing video: {e}")
+    else:
+        print("Invalid option selected.")
 
 def handle_image(file_path):
     print("1. Resize Image")
@@ -360,7 +407,6 @@ def handle_image(file_path):
     else:
         print("Invalid option selected.")
 
-
 def handle_pdf(file_path):
     print("1. Convert PDF to Text")
     print("2. Merge PDFs")
@@ -368,6 +414,7 @@ def handle_pdf(file_path):
     print("4. Extract Pages from PDF")
     print("5. Rotate Pages in PDF")
     print("6. Compress PDF")
+    print("7. Add Image to PDF")
     choice = input("Select option: ")
     if choice == "1":
         pdf_to_text(file_path)
@@ -383,9 +430,11 @@ def handle_pdf(file_path):
         rotate_pages(file_path)
     elif choice == "6":
         compress_pdf(file_path)
+    elif choice == "7":
+        image_path = input("Enter the image file path to add: ")
+        add_image_to_pdf(file_path, image_path)
     else:
         print("Invalid option selected.")
-
 
 def handle_text(file_path):
     print("1. Count Words")
@@ -429,6 +478,8 @@ def handle_text(file_path):
     else:
         print("Invalid option selected.")
 
+def handle_video(file_path):
+    video_operations(file_path)
 
 def main():
     parser = argparse.ArgumentParser(description="Universal File Tool (UFT)")
@@ -449,9 +500,10 @@ def main():
         handle_pdf(file_path)
     elif file_extension == ".txt":
         handle_text(file_path)
+    elif file_extension in [".mp4", ".avi", ".mov", ".mkv"]:
+        handle_video(file_path)
     else:
         print("Unsupported file type.")
-
 
 if __name__ == "__main__":
     main()
