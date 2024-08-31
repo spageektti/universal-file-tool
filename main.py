@@ -4,6 +4,7 @@ from image_handler import handle_image
 from pdf_handler import handle_pdf
 from text_handler import handle_text
 from video_handler import handle_video
+from markdown_handler import handle_markdown 
 
 def main():
     parser = argparse.ArgumentParser(description="Universal File Tool (UFT)")
@@ -26,6 +27,8 @@ def main():
         handle_text(file_path)
     elif file_extension in [".mp4", ".avi", ".mov", ".mkv"]:
         handle_video(file_path)
+    elif file_extension == ".md":
+        handle_markdown(file_path)
     else:
         print("Unsupported file type.")
 
