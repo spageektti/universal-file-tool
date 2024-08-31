@@ -1,7 +1,6 @@
 import os
-from PIL import Image
+from PIL import Image, ImageEnhance, ImageDraw, ImageFont
 from PyPDF2 import PdfReader, PdfWriter
-from reportlab.pdfgen import canvas
 
 def resize_image(file_path):
     """Resize an image."""
@@ -96,6 +95,70 @@ def compress_image(file_path):
     except Exception as e:
         print(f"Error compressing image: {e}")
 
+def adjust_brightness(file_path):
+    """Adjust the brightness of an image."""
+    try:
+        img = Image.open(file_path)
+        factor = float(input("Enter brightness factor (0.0 - 2.0): "))
+        enhancer = ImageEnhance.Brightness(img)
+        img = enhancer.enhance(factor)
+        img.save(file_path)
+        print("Brightness adjusted successfully.")
+    except Exception as e:
+        print(f"Error adjusting brightness: {e}")
+
+def adjust_contrast(file_path):
+    """Adjust the contrast of an image."""
+    try:
+        img = Image.open(file_path)
+        factor = float(input("Enter contrast factor (0.0 - 2.0): "))
+        enhancer = ImageEnhance.Contrast(img)
+        img = enhancer.enhance(factor)
+        img.save(file_path)
+        print("Contrast adjusted successfully.")
+    except Exception as e:
+        print(f"Error adjusting contrast: {e}")
+
+def add_border(file_path):
+    """Add a border around the image."""
+    try:
+        img = Image.open(file_path)
+        border_size = int(input("Enter border size (in pixels): "))
+        bordered_img = Image.new("RGB", (img.width + 2 * border_size, img.height + 2 * border_size), "black")
+        bordered_img.paste(img, (border_size, border_size))
+        bordered_img.save(file_path)
+        print("Border added successfully.")
+    except Exception as e:
+        print(f"Error adding border: {e}")
+
+def create_thumbnail(file_path):
+    """Create a thumbnail version of the image."""
+    try:
+        img = Image.open(file_path)
+        size = (128, 128)
+        img.thumbnail(size)
+        thumbnail_path = os.path.splitext(file_path)[0] + "_thumbnail.jpg"
+        img.save(thumbnail_path, "JPEG")
+        print(f"Thumbnail created successfully: {thumbnail_path}")
+    except Exception as e:
+        print(f"Error creating thumbnail: {e}")
+
+def overlay_text(file_path):
+    """Overlay text on an image."""
+    try:
+        img = Image.open(file_path)
+        draw = ImageDraw.Draw(img)
+        text = input("Enter text to overlay: ")
+        font_size = int(input("Enter font size: "))
+        font = ImageFont.load_default()
+        text_width, text_height = draw.textsize(text, font=font)
+        position = (img.width // 2 - text_width // 2, img.height // 2 - text_height // 2)
+        draw.text(position, text, (255, 255, 255), font=font) 
+        img.save(file_path)
+        print("Text overlay added successfully.")
+    except Exception as e:
+        print(f"Error overlaying text: {e}")
+
 def add_image_to_pdf(pdf_path, image_path):
     """Add an image to a PDF."""
     try:
@@ -127,7 +190,12 @@ def handle_image(file_path):
     print("5. Convert to Grayscale")
     print("6. Crop Image")
     print("7. Compress Image")
-    print("8. Add Image to PDF")
+    print("8. Adjust Brightness")
+    print("9. Adjust Contrast")
+    print("10. Add Border")
+    print("11. Create Thumbnail")
+    print("12. Overlay Text")
+    print("13. Add Image to PDF")
     choice = input("Select option: ")
     if choice == "1":
         resize_image(file_path)
@@ -144,6 +212,16 @@ def handle_image(file_path):
     elif choice == "7":
         compress_image(file_path)
     elif choice == "8":
+        adjust_brightness(file_path)
+    elif choice == "9":
+        adjust_contrast(file_path)
+    elif choice == "10":
+        add_border(file_path)
+    elif choice == "11":
+        create_thumbnail(file_path)
+    elif choice == "12":
+        overlay_text(file_path)
+    elif choice == "13":
         pdf_path = input("Enter the PDF file path to add the image to: ")
         add_image_to_pdf(pdf_path, file_path)
     else:
