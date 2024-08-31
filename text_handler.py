@@ -129,14 +129,79 @@ def split_file(file_path):
         lines_per_file = int(input("Enter the number of lines per file: "))
         with open(file_path, "r") as file:
             lines = file.readlines()
-
+        
         for i in range(0, len(lines), lines_per_file):
             with open(f"{os.path.splitext(file_path)[0]}_part_{i // lines_per_file + 1}.txt", "w") as output_file:
                 output_file.writelines(lines[i:i + lines_per_file])
-
+        
         print("File split successfully.")
     except Exception as e:
         print(f"Error splitting file: {e}")
+
+def sort_lines(file_path):
+    """Sort the lines in a text file."""
+    try:
+        with open(file_path, "r") as file:
+            lines = file.readlines()
+        lines.sort()
+        with open(file_path, "w") as file:
+            file.writelines(lines)
+        print("Lines sorted successfully.")
+    except Exception as e:
+        print(f"Error sorting lines: {e}")
+
+def reverse_content(file_path):
+    """Reverse the content of a text file."""
+    try:
+        with open(file_path, "r") as file:
+            content = file.read()
+        reversed_content = content[::-1]
+        with open(file_path, "w") as file:
+            file.write(reversed_content)
+        print("Content reversed successfully.")
+    except Exception as e:
+        print(f"Error reversing content: {e}")
+
+def merge_files(file_paths):
+    """Merge multiple text files into one."""
+    try:
+        merged_file_path = "merged_file.txt"
+        with open(merged_file_path, "w") as merged_file:
+            for file_path in file_paths:
+                with open(file_path, "r") as file:
+                    merged_file.write(file.read() + "\n")
+        print(f"Files merged successfully into: {merged_file_path}")
+    except Exception as e:
+        print(f"Error merging files: {e}")
+
+def remove_duplicates(file_path):
+    """Remove duplicate lines from a text file."""
+    try:
+        with open(file_path, "r") as file:
+            lines = file.readlines()
+        unique_lines = list(set(lines))
+        with open(file_path, "w") as file:
+            file.writelines(unique_lines)
+        print("Duplicate lines removed successfully.")
+    except Exception as e:
+        print(f"Error removing duplicates: {e}")
+
+def extract_sections_by_keyword(file_path):
+    """Extract sections of text based on a keyword."""
+    try:
+        keyword = input("Enter the keyword to search for: ")
+        output_path = os.path.splitext(file_path)[0] + "_extracted.txt"
+        with open(file_path, "r") as file:
+            lines = file.readlines()
+        
+        extracted_lines = [line for line in lines if keyword in line]
+        
+        with open(output_path, "w") as output_file:
+            output_file.writelines(extracted_lines)
+        
+        print(f"Extracted sections containing '{keyword}' successfully: {output_path}")
+    except Exception as e:
+        print(f"Error extracting sections: {e}")
 
 def handle_text(file_path):
     print("1. Count Words")
@@ -149,6 +214,12 @@ def handle_text(file_path):
     print("8. Encrypt Text with AES")
     print("9. Decrypt Text with AES")
     print("10. Split File into Smaller Files")
+    print("11. Sort Lines")
+    print("12. Reverse Content")
+    print("13. Merge Multiple Files")
+    print("14. Remove Duplicate Lines")
+    print("15. Extract Sections by Keyword")
+    
     choice = input("Select option: ")
     if choice == "1":
         count_words(file_path)
@@ -180,5 +251,16 @@ def handle_text(file_path):
         aes_decrypt(file_path, key)
     elif choice == "10":
         split_file(file_path)
+    elif choice == "11":
+        sort_lines(file_path)
+    elif choice == "12":
+        reverse_content(file_path)
+    elif choice == "13":
+        file_paths = input("Enter the paths of the files to merge (comma-separated): ").split(",")
+        merge_files([f.strip() for f in file_paths])
+    elif choice == "14":
+        remove_duplicates(file_path)
+    elif choice == "15":
+        extract_sections_by_keyword(file_path)
     else:
         print("Invalid option selected.")
