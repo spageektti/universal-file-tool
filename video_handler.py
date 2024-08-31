@@ -1,5 +1,4 @@
-import os
-from moviepy.editor import VideoFileClip, concatenate_videoclips
+from moviepy.editor import TextClip, CompositeVideoClip
 
 def video_operations(file_path):
     """Perform basic video operations."""
@@ -7,13 +6,18 @@ def video_operations(file_path):
     print("2. Extract Audio from Video")
     print("3. Concatenate Videos")
     print("4. Resize Video")
+    print("5. Add Text to Video")
+    print("6. Change Video Speed")
+    print("7. Apply Fade-In Effect")
     choice = input("Select option: ")
+    
     if choice == "1":
         try:
             video = VideoFileClip(file_path)
             print(f"Video duration: {video.duration} seconds")
         except Exception as e:
             print(f"Error getting video duration: {e}")
+    
     elif choice == "2":
         try:
             video = VideoFileClip(file_path)
@@ -22,6 +26,7 @@ def video_operations(file_path):
             print(f"Audio extracted successfully: {audio_path}")
         except Exception as e:
             print(f"Error extracting audio: {e}")
+    
     elif choice == "3":
         try:
             video_files = input("Enter video files to concatenate (comma-separated): ").split(",")
@@ -32,6 +37,7 @@ def video_operations(file_path):
             print(f"Videos concatenated successfully: {output_path}")
         except Exception as e:
             print(f"Error concatenating videos: {e}")
+    
     elif choice == "4":
         try:
             video = VideoFileClip(file_path)
@@ -43,6 +49,44 @@ def video_operations(file_path):
             print(f"Video resized successfully: {output_path}")
         except Exception as e:
             print(f"Error resizing video: {e}")
+
+    elif choice == "5":
+        try:
+            video = VideoFileClip(file_path)
+            text = input("Enter text to add to video: ")
+            fontsize = int(input("Enter font size: "))
+            color = input("Enter text color (e.g., 'white', 'red'): ")
+            text_clip = TextClip(text, fontsize=fontsize, color=color)
+            text_clip = text_clip.set_position('center').set_duration(video.duration)
+            final_video = CompositeVideoClip([video, text_clip])
+            output_path = os.path.splitext(file_path)[0] + "_text_added.mp4"
+            final_video.write_videofile(output_path)
+            print(f"Text added successfully: {output_path}")
+        except Exception as e:
+            print(f"Error adding text to video: {e}")
+
+    elif choice == "6":
+        try:
+            video = VideoFileClip(file_path)
+            speed_factor = float(input("Enter speed factor (e.g., 2 for double speed, 0.5 for half speed): "))
+            sped_up_video = video.fx(vfx.speedx, speed_factor)
+            output_path = os.path.splitext(file_path)[0] + "_speed_changed.mp4"
+            sped_up_video.write_videofile(output_path)
+            print(f"Video speed changed successfully: {output_path}")
+        except Exception as e:
+            print(f"Error changing video speed: {e}")
+
+    elif choice == "7":
+        try:
+            video = VideoFileClip(file_path)
+            fade_duration = float(input("Enter fade-in duration in seconds: "))
+            faded_video = video.fx(vfx.fadein, fade_duration)
+            output_path = os.path.splitext(file_path)[0] + "_fade_in.mp4"
+            faded_video.write_videofile(output_path)
+            print(f"Fade-in effect applied successfully: {output_path}")
+        except Exception as e:
+            print(f"Error applying fade-in effect: {e}")
+
     else:
         print("Invalid option selected.")
 
