@@ -1,6 +1,8 @@
 import os
 import hashlib
 from cryptography.fernet import Fernet
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
 
 def count_words(file_path):
     """Count the number of words in a text file."""
@@ -121,6 +123,21 @@ def aes_decrypt(file_path, key):
     except Exception as e:
         print(f"Error decrypting file: {e}")
 
+def split_file(file_path):
+    """Split a text file into multiple smaller files based on a specified number of lines."""
+    try:
+        lines_per_file = int(input("Enter the number of lines per file: "))
+        with open(file_path, "r") as file:
+            lines = file.readlines()
+
+        for i in range(0, len(lines), lines_per_file):
+            with open(f"{os.path.splitext(file_path)[0]}_part_{i // lines_per_file + 1}.txt", "w") as output_file:
+                output_file.writelines(lines[i:i + lines_per_file])
+
+        print("File split successfully.")
+    except Exception as e:
+        print(f"Error splitting file: {e}")
+
 def handle_text(file_path):
     print("1. Count Words")
     print("2. Count Lines")
@@ -131,6 +148,7 @@ def handle_text(file_path):
     print("7. Calculate Hash (SHA-256, SHA-1, MD5)")
     print("8. Encrypt Text with AES")
     print("9. Decrypt Text with AES")
+    print("10. Split File into Smaller Files")
     choice = input("Select option: ")
     if choice == "1":
         count_words(file_path)
@@ -160,5 +178,7 @@ def handle_text(file_path):
     elif choice == "9":
         key = input("Enter the AES decryption key: ")
         aes_decrypt(file_path, key)
+    elif choice == "10":
+        split_file(file_path)
     else:
         print("Invalid option selected.")
