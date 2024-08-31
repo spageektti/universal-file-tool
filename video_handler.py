@@ -1,0 +1,50 @@
+import os
+from moviepy.editor import VideoFileClip, concatenate_videoclips
+
+def video_operations(file_path):
+    """Perform basic video operations."""
+    print("1. Get Video Duration")
+    print("2. Extract Audio from Video")
+    print("3. Concatenate Videos")
+    print("4. Resize Video")
+    choice = input("Select option: ")
+    if choice == "1":
+        try:
+            video = VideoFileClip(file_path)
+            print(f"Video duration: {video.duration} seconds")
+        except Exception as e:
+            print(f"Error getting video duration: {e}")
+    elif choice == "2":
+        try:
+            video = VideoFileClip(file_path)
+            audio_path = os.path.splitext(file_path)[0] + "_audio.mp3"
+            video.audio.write_audiofile(audio_path)
+            print(f"Audio extracted successfully: {audio_path}")
+        except Exception as e:
+            print(f"Error extracting audio: {e}")
+    elif choice == "3":
+        try:
+            video_files = input("Enter video files to concatenate (comma-separated): ").split(",")
+            clips = [VideoFileClip(v.strip()) for v in video_files]
+            final_clip = concatenate_videoclips(clips)
+            output_path = "concatenated_video.mp4"
+            final_clip.write_videofile(output_path)
+            print(f"Videos concatenated successfully: {output_path}")
+        except Exception as e:
+            print(f"Error concatenating videos: {e}")
+    elif choice == "4":
+        try:
+            video = VideoFileClip(file_path)
+            width = int(input("Enter new width: "))
+            height = int(input("Enter new height: "))
+            resized_video = video.resize(newsize=(width, height))
+            output_path = os.path.splitext(file_path)[0] + "_resized.mp4"
+            resized_video.write_videofile(output_path)
+            print(f"Video resized successfully: {output_path}")
+        except Exception as e:
+            print(f"Error resizing video: {e}")
+    else:
+        print("Invalid option selected.")
+
+def handle_video(file_path):
+    video_operations(file_path)
