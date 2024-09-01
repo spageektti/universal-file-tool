@@ -6,6 +6,7 @@ from text_handler import handle_text
 from video_handler import handle_video
 from markdown_handler import handle_markdown
 from csv_handler import handle_csv
+from json_handler impory handle_json
 
 def main():
     parser = argparse.ArgumentParser(description="Universal File Tool (UFT)")
@@ -32,6 +33,8 @@ def main():
         handle_markdown(file_path)
     elif file_extension == ".csv":
         handle_csv(file_path)
+		 	elif file_extension == ".json":
+        handle_json(file_path)
     else:
         print("Unsupported file type.")
 
