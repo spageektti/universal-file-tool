@@ -1,0 +1,7 @@
+Pillow
+PyPDF2
+pdf2image
+cryptography
+reportlab
+moviepy
+markdown
