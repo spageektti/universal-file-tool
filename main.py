@@ -33,7 +33,7 @@ def main():
         handle_markdown(file_path)
     elif file_extension == ".csv":
         handle_csv(file_path)
-		 	elif file_extension == ".json":
+    elif file_extension == ".json":
         handle_json(file_path)
     else:
         print("Unsupported file type.")
