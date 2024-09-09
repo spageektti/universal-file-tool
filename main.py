@@ -6,7 +6,7 @@ from text_handler import handle_text
 from video_handler import handle_video
 from markdown_handler import handle_markdown
 from csv_handler import handle_csv
-from json_handler impory handle_json
+from json_handler import handle_json
 
 def main():
     parser = argparse.ArgumentParser(description="Universal File Tool (UFT)")
