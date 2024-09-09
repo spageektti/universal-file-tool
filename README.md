@@ -1,5 +1,7 @@
 # Universal File Tool
 
+![Zrzut ekranu_20240909_194348](https://github.com/user-attachments/assets/f712a43e-7874-4c25-a381-551cfadcaa3c)
+
 ## Overview
 
 The Universal File Tool is a simple command-line utility that allows users to perform various actions on different file types. By specifying a file, the tool will list all available actions tailored to the file's format, including images, PDFs, Markdown, JSON, CSV, and videos.
